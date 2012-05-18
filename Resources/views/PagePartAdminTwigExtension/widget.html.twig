@@ -95,7 +95,7 @@
                         <a href="#" class="bleu" onclick="return edit_{{pagepartref.id}}()">Edit</a>
                     {% endif %}
             	</div>
-                <div class="block" id="{{pagepartref.id}}_view" {% if editpagepart is defined and editpagepart == loop.index %}style="display:none"{% endif %}>
+                <div class="block" id="{{pagepartref.id}}_view" {% if (editpagepart is defined and editpagepart == loop.index) or (invalidppids['pagepartadmin_'~pagepartref.context~'_'~pagepartref.id] is defined) %}style="display:none"{% endif %}>
                     {% include pagepart.defaultview with {'resource': pagepart, 'pagepartadmin': pagepartadmin, 'pageparts': pagepartadmin.pagepartrefs} %}
                 </div>
                 {% if form['pagepartadmin_'~pagepartref.context~'_'~pagepartref.id].count %}

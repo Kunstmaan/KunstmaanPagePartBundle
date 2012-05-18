@@ -48,6 +48,7 @@ class PagePartAdmin {
                     $pagepart = $this->em->getRepository($pagepartref->getPagePartEntityname())->find($pagepartref->getPagePartId());
                     $this->em->remove($pagepart);
                     $this->em->remove($pagepartref);
+                    $this->em->flush();
                 }
             }
         }
