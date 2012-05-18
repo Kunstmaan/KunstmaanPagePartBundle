@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: kris
- * Date: 15/11/11
- * Time: 23:22
- * To change this template use File | Settings | File Templates.
- */
 
 namespace Kunstmaan\PagePartBundle\PagePartAdmin;
 
@@ -62,7 +55,7 @@ class PagePartAdmin {
         if(is_string($addpagepart) && $addpagepart != ''){
         	$addpagepartposition = $this->request->request->get($this->getContext()."_addposition");
         	if(!is_string($addpagepartposition) || $addpagepartposition == ''){
-        		$addpagepartposition = sizeof($this->getPagePartRefs())+1;
+        		$addpagepartposition = sizeof($pagepartrefs)+1;
         	}
             $newpagepart = new $addpagepart;
             $this->em->persist($newpagepart);

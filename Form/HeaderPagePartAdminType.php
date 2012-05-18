@@ -6,11 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * class to define the form to upload a picture
- *
+ * HeaderPagePartAdminType
  */
 class HeaderPagePartAdminType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('niv', 'choice', array(
@@ -18,14 +20,14 @@ class HeaderPagePartAdminType extends AbstractType
             'required'  => false,
         ));
         $builder
-            ->add('title', null, array('required' => false))
-        ;
+            ->add('title', null, array('required' => false));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'kunstmaan_pagepartbundle_headerpageparttype';
     }
 }
-
-?>
