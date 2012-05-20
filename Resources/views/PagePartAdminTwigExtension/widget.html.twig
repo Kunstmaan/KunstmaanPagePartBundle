@@ -12,6 +12,7 @@
     	window.VideoChosenCallback = new Array();
 	}
 </script>
+
 <div class="pagepartscontainer" id="parts_{{pagepartadmin.context}}">
 	{% if app.request.get('edit') is defined and app.request.get('edit') !="" %}
 		{% set editpagepart = app.request.get('edit') + 2 %}
@@ -94,13 +95,12 @@
                         <a href="#" class="bleu" onclick="return edit_{{pagepartref.id}}()">Edit</a>
                     {% endif %}
             	</div>
-                <div class="block" id="{{pagepartref.id}}_view" {% if editpagepart is defined and editpagepart == loop.index %}style="display:none"{% endif %}>
+                <div class="block" id="{{pagepartref.id}}_view" {% if (editpagepart is defined and editpagepart == loop.index) or (invalidppids['pagepartadmin_'~pagepartref.context~'_'~pagepartref.id] is defined) %}style="display:none"{% endif %}>
                     {% include pagepart.defaultview with {'resource': pagepart, 'pagepartadmin': pagepartadmin, 'pageparts': pagepartadmin.pagepartrefs} %}
                 </div>
                 {% if form['pagepartadmin_'~pagepartref.context~'_'~pagepartref.id].count %}
-                    <div class="block" id="{{pagepartref.id}}_edit" {% if editpagepart is not defined or editpagepart != loop.index %}style="display:none"{% endif %}>
+                    <div class="block" id="{{pagepartref.id}}_edit" {% if (editpagepart is not defined or editpagepart != loop.index) and (invalidppids['pagepartadmin_'~pagepartref.context~'_'~pagepartref.id] is not defined) %}style="display:none"{% endif %}>
                         {% set pagepartid %}pagepart{{pagepartref.id}}{%endset%}
-
                         {% if pagepart.editTemplate is defined %}
                             {% include pagepart.editTemplate with {'resource': pagepart, 'pagepartid': pagepartid, 'form': form['pagepartadmin_'~pagepartref.context~'_'~pagepartref.id]} %}
                         {% else %}
