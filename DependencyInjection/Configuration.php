@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('link_page_part')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('devitize_filter')
                             ->defaultValue(false)
