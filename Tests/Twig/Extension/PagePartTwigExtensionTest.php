@@ -1,5 +1,6 @@
 <?php
 namespace Users\Development\KunstmaanPagePartBundle\Tests\Twig\Extension;
+
 use Kunstmaan\PagePartBundle\Twig\Extension\PagePartTwigExtension;
 
 class PagePartTwigExtensionTest extends \PHPUnit_Framework_TestCase
