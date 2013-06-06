@@ -8,3 +8,15 @@ View more screenshots and information [http://bundles.kunstmaan.be](http://bundl
 ## Installation
 
 This bundle is compatible with all Symfony 2.2.* releases. More information about installing can be found in this line by line walkthrough of installing Symfony and all our bundles, please refer to the [Getting Started guide](http://bundles.kunstmaan.be/doc/01_GettingStarted.html) and enjoy the full blown experience.
+
+## Configuration
+
+You can enable a rewrite of the link page part url, add the following line in your config.yml
+
+``` yaml
+# app/config/config.yml
+kunstmaan_page_part:
+    link_page_part:
+        devitize_filter: true               # enable the rewrite
+        devitize_index: 'app_dev.php'       # your new index file
+```
