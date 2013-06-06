@@ -14,7 +14,7 @@ use Kunstmaan\NodeBundle\Form\Type\URLChooserType;
 /**
  * PagePartAdminTypeTestCase
  */
-class PagePartAdminTypeTestCase extends WebTestCase
+class PagePartAdminTypeTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var FormBuilder
