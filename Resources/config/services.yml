@@ -22,7 +22,11 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: twig.extension }
-            
+            - %kernel.environment%
+        calls:
+            - [setDevitizeIndexEnabled, ["%kunstmaan_page_part.link_page_part.devitize_filter%"]]
+            - [setDevitizeIndex, ["%kunstmaan_page_part.link_page_part.devitize_index%"]]
+
     kunstmaan_pagetemplate.twig.extension:
         class: Kunstmaan\PagePartBundle\Twig\Extension\PageTemplateTwigExtension
         arguments:

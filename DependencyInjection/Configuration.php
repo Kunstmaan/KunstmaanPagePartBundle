@@ -17,11 +17,24 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('kunstmaan_page_part');
+        $rootNode = $treeBuilder->root('kunstmaan_page_part');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('link_page_part')
+                    ->children()
+                        ->scalarNode('devitize_filter')
+                            ->defaultValue(false)
+                            ->info('convert all linkPagePart urls into app_dev.php (when running in dev)')
+                            ->end()
+                        ->scalarNode('devitize_index')
+                            ->defaultValue('app_dev.php')
+                            ->info('the new index file')
+                            ->end()
+                    ->end()
+                ->end()
+            ->end();
+
         return $treeBuilder;
     }
 }
