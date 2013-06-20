@@ -1,6 +1,7 @@
 <?php
 
 namespace Kunstmaan\PagePartBundle\DependencyInjection;
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -19,8 +20,16 @@ class KunstmaanPagePartExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
-        $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+
+        $container->setParameter(
+            'kunstmaan_page_part.link_page_part.devitize_filter',
+            $config['link_page_part']['devitize_filter']);
+
+        $container->setParameter(
+            'kunstmaan_page_part.link_page_part.devitize_index',
+            $config['link_page_part']['devitize_index']);
     }
 }

@@ -21,11 +21,28 @@ class PagePartTwigExtension extends \Twig_Extension
     protected $environment;
 
     /**
-     * @param EntityManager $em
+     * @var string
      */
-    public function __construct(EntityManager $em)
+    protected $kernelEnvironment;
+
+    /**
+     * @var boolean
+     */
+    protected $devitizeIndexEnabled;
+
+    /**
+     * @var string
+     */
+    protected $devitizeIndex;
+
+    /**
+     * @param EntityManager $em
+     * @param string        $kernelEnvironment
+     */
+    public function __construct(EntityManager $em, $kernelEnvironment)
     {
         $this->em = $em;
+        $this->kernelEnvironment = $kernelEnvironment;
     }
 
     /**
@@ -34,6 +51,16 @@ class PagePartTwigExtension extends \Twig_Extension
     public function initRuntime(\Twig_Environment $environment)
     {
         $this->environment = $environment;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return array(
+            'devitize_url' => new \Twig_Filter_Method($this, 'devitizeUrl'),
+        );
     }
 
     /**
@@ -83,6 +110,35 @@ class PagePartTwigExtension extends \Twig_Extension
 
         return $pageparts;
     }
+
+    /**
+     * @param string $url    The url
+     *
+     * @return string
+     */
+    public function devitizeUrl($url)
+    {
+        if ($this->kernelEnvironment != 'dev' || $this->devitizeIndexEnabled !== true) {
+            return $url;
+        }
+
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return sprintf('/%s%s', $this->devitizeIndex, $url);
+        }
+
+        return $url;
+    }
+
+    public function setDevitizeIndex($devitizeIndex)
+    {
+        $this->devitizeIndex = $devitizeIndex;
+    }
+
+    public function setDevitizeIndexEnabled($devitizeIndexEnabled)
+    {
+        $this->devitizeIndexEnabled = $devitizeIndexEnabled;
+    }
+
 
     /**
      * @return string
