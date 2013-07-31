@@ -18,8 +18,7 @@
             {% set editable = false %}
         {% endif %}
         <div class="prop_bar {% if not form['pagepartadmin_'~id].count %}noedit{% endif %}">
-            <i class="icon-move"></i>
-            <h6>{{pagepartadmin.getType(pagepart)}}</h6>
+            <h6><i class="icon-move"></i> {{pagepartadmin.getType(pagepart)}}</h6>
             <div class="actions">
                 <button class="del red" data-keyboard="true" data-toggle="modal" data-target="#delete-pagepart-modal{{id}}">
                     <i class="icon-trash"></i>
