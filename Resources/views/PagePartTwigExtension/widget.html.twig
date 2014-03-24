@@ -3,6 +3,6 @@
         {{ render(controller(box.controller, { 'pagePart': box })) }}
     {% else %}
         {% set resource = box %}
-        {{ include box.defaultview }}
+        {% include box.defaultview %}
     {% endif %}
 {% endfor %}
