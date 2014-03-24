@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 /**
  * Generic Controller for pageparts
  */
-class PagePartAdminController extends Controller
+class PagePartController extends Controller
 {
 
     /**
