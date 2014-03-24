@@ -1,4 +1,8 @@
 {% for box in pageparts %}
-    {% set resource = box %}
-    {% include box.defaultview %}
+    {% if box.controller %}
+        {{ render(controller(box.controller, { 'pagePart': box })) }}
+    {% else %}
+        {% set resource = box %}
+        {% include box.defaultview %}
+    {% endif %}
 {% endfor %}
