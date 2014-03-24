@@ -1,6 +1,6 @@
 {% for box in pageparts %}
     {% if box.controller %}
-        {{ render_esi(controller(box.controller, { 'pagePart': box })) }}
+        {{ render(controller(box.controller, { 'pagePart': box })) }}
     {% else %}
         {% set resource = box %}
         {{ include box.defaultview }}
