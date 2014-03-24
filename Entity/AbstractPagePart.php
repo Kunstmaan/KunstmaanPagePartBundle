@@ -21,4 +21,9 @@ abstract class AbstractPagePart extends AbstractEntity implements PagePartInterf
     {
         return $this->getDefaultView();
     }
+    
+    public function getController()
+    {
+        return 'KunstmaanPagePartBundle:PagePart:index';
+    }
 }

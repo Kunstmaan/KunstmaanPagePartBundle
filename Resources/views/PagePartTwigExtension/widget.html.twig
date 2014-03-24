@@ -1,4 +1,5 @@
 {% for box in pageparts %}
     {% set resource = box %}
-    {% include box.defaultview %}
+    {# include box.defaultview #}
+    {{ render_esi(controller(box.controller, { 'pagePart': box })) }}
 {% endfor %}
