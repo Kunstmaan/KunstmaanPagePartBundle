@@ -15,9 +15,9 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": ">=2.3.0,<2.4.0",
-        "kunstmaan/admin-bundle": "self.version",
-        "kunstmaan/utilities-bundle": "self.version",
-        "kunstmaan/node-bundle": "self.version"
+        "kunstmaan/admin-bundle": "dev-master",
+        "kunstmaan/utilities-bundle": "dev-master",
+        "kunstmaan/node-bundle": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
