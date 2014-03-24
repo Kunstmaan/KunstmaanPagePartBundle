@@ -22,8 +22,14 @@ abstract class AbstractPagePart extends AbstractEntity implements PagePartInterf
         return $this->getDefaultView();
     }
     
+    /**
+     * Method to return optional controller to handle the page part
+     * A sample controller is KunstmaanPagePartBundle:PagePartController
+     * 
+     * @return boolean|string Returns either the Controller reference or false if no controller should be used
+     */
     public function getController()
     {
-        return 'KunstmaanPagePartBundle:PagePart:index';
+        return false;
     }
 }

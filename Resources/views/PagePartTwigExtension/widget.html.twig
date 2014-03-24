@@ -1,5 +1,8 @@
 {% for box in pageparts %}
-    {% set resource = box %}
-    {# include box.defaultview #}
-    {{ render_esi(controller(box.controller, { 'pagePart': box })) }}
+    {% if box.controller %}
+        {% set resource = box %}
+        {{ include box.defaultview }}
+    {% else %}
+        {{ render_esi(controller(box.controller, { 'pagePart': box })) }}
+    {% endif %}
 {% endfor %}
