@@ -23,5 +23,10 @@
     "autoload": {
         "psr-0": { "Kunstmaan\\PagePartBundle": "" }
     },
-    "target-dir": "Kunstmaan/PagePartBundle"
+    "target-dir": "Kunstmaan/PagePartBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.3.x-dev"
+        }
+    }
 }
