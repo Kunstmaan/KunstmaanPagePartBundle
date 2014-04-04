@@ -14,21 +14,14 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": ">=2.3.0,<2.4.0",
+        "symfony/symfony": "2.3.*",
         "kunstmaan/admin-bundle": "2.3.*",
         "kunstmaan/utilities-bundle": "2.3.*",
         "kunstmaan/node-bundle": "2.3.*"
     },
     "require-dev": {
-        "knplabs/knp-menu": "2.0.0-alpha1@dev",
-        "knplabs/knp-menu-bundle": "2.0.0-alpha1@dev",
-        "white-october/pagerfanta-bundle": "dev-master",
-        "pagerfanta/pagerfanta": "dev-master",
-        "doctrine/data-fixtures": "1.0.*@dev",
-        "doctrine/doctrine-fixtures-bundle": "2.1.*@dev",
-        "friendsofsymfony/user-bundle": "dev-master",
-        "symfony-cmf/routing": "~1.1.0-dev",
-        "symfony-cmf/routing-bundle": "1.1.x-dev"
+        "knplabs/knp-menu": "2.0.*@dev",
+        "knplabs/knp-menu-bundle": "2.0.*@dev"
     },
     "minimum-stability": "stable",
     "autoload": {
