@@ -3,9 +3,11 @@
 namespace Kunstmaan\PagePartBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityManager;
+use Kunstmaan\PagePartBundle\Helper\RenderContext;
 use Kunstmaan\PagePartBundle\Repository\PagePartRefRepository;
 use Kunstmaan\PagePartBundle\Helper\PagePartInterface;
 use Kunstmaan\PagePartBundle\Helper\HasPagePartsInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * PagePartTwigExtension
@@ -14,6 +16,7 @@ class PagePartTwigExtension extends \Twig_Extension
 {
 
     protected $em;
+    protected $container;
 
     /**
      * @var \Twig_Environment
@@ -21,11 +24,13 @@ class PagePartTwigExtension extends \Twig_Extension
     protected $environment;
 
     /**
-     * @param EntityManager $em
+     * @param ContainerInterface $container
+     * @param EntityManager      $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(ContainerInterface $container, EntityManager $em)
     {
         $this->em = $em;
+        $this->container = $container;
     }
 
     /**
@@ -41,9 +46,9 @@ class PagePartTwigExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            'render_pageparts'  => new \Twig_Function_Method($this, 'renderPageParts', array('needs_context' => true, 'is_safe' => array('html'))),
-            'getpageparts'  => new \Twig_Function_Method($this, 'getPageParts'),
+        return array (
+            'render_pageparts' => new \Twig_Function_Method($this, 'renderPageParts', array ('needs_context' => true, 'is_safe' => array ('html'))),
+            'getpageparts'     => new \Twig_Function_Method($this, 'getPageParts'),
         );
     }
 
@@ -55,15 +60,28 @@ class PagePartTwigExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function renderPageParts(array $twigContext, HasPagePartsInterface $page, $contextName = "main", array $parameters = array())
+    public function renderPageParts(array $twigContext, HasPagePartsInterface $page, $contextName = "main", array $parameters = array ())
     {
         $template = $this->environment->loadTemplate("KunstmaanPagePartBundle:PagePartTwigExtension:widget.html.twig");
         /* @var $entityRepository PagePartRefRepository */
         $entityRepository = $this->em->getRepository('KunstmaanPagePartBundle:PagePartRef');
         $pageparts = $entityRepository->getPageParts($page, $contextName);
-        $newTwigContext = array_merge($parameters, array(
-            'pageparts' => $pageparts
-        ));
+
+        $entityContext = new RenderContext();
+
+        foreach ($pageparts as $pagePart) {
+            if (method_exists($pagePart, "service")) {
+                $pagePart->service($this->container, $entityContext);
+            }
+        }
+
+        $twigContext = array_merge($twigContext, ["data" => $entityContext]);
+
+        $newTwigContext = array_merge(
+            $parameters, array (
+                'pageparts' => $pageparts
+            )
+        );
         $newTwigContext = array_merge($newTwigContext, $twigContext);
 
         return $template->render($newTwigContext);

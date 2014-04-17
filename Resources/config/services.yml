@@ -20,6 +20,7 @@ services:
     kunstmaan_pageparts.twig.extension:
         class: Kunstmaan\PagePartBundle\Twig\Extension\PagePartTwigExtension
         arguments:
+            - "@service_container"
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: twig.extension }
