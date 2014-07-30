@@ -38,7 +38,6 @@
 <div id="pagepartsdeletedcontainer"></div>
 <script>
 
-    var CKEditors_{{ pagepartadmin.context }} = [];
     //TODO: singleton pagepareditor
     PagePartEditor = {
     	propBarMouseDownHandler: function(){
@@ -120,7 +119,7 @@
 	         		config.shiftEnterMode = CKEDITOR.ENTER_P;
             }
 
-            CKEditors_{{ pagepartadmin.context }}.push(CKEDITOR.replace( $(this).attr('id'), config));
+            CKEDITOR.replace( $(this).attr('id'), config);
 
 		});
     }
