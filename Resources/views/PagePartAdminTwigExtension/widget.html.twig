@@ -1,29 +1,29 @@
 <script>
-	if(typeof window.FileChosenCallback == 'undefined') {
-    	window.FileChosenCallback = [];
-	}
-	if(typeof window.LinkChosenCallback == 'undefined') {
-    	window.LinkChosenCallback = [];
-	}
-	if(typeof window.SlideChosenCallback == 'undefined') {
-    	window.SlideChosenCallback = [];
-	}
-	if(typeof window.VideoChosenCallback == 'undefined') {
-    	window.VideoChosenCallback = [];
-	}
-	if(typeof PagePartEditor == 'undefined') {
-		PagePartEditor = [];
-	}
+    if(typeof window.FileChosenCallback == 'undefined') {
+        window.FileChosenCallback = [];
+    }
+    if(typeof window.LinkChosenCallback == 'undefined') {
+        window.LinkChosenCallback = [];
+    }
+    if(typeof window.SlideChosenCallback == 'undefined') {
+        window.SlideChosenCallback = [];
+    }
+    if(typeof window.VideoChosenCallback == 'undefined') {
+        window.VideoChosenCallback = [];
+    }
+    if(typeof PagePartEditor == 'undefined') {
+        PagePartEditor = [];
+    }
 </script>
 <div class="pagepartscontainer" data-context="{{pagepartadmin.context}}" data-pageid="{{ pagepartadmin.page.id }}" data-pageclassname="{{ pagepartadmin.getClassName(pagepartadmin.page) }}">
-	<div class="new_pagepart first">
-	  <select onchange="return PagePartEditor.addPagepart(this)" class="addselect">
-	    <option value="">Add a pagepart</option>
-	    {% for pagePartType in pagepartadmin.possiblePagePartTypes %}
-	      <option value="{{pagePartType.class}}">{{pagePartType.name}}</option>
-	    {% endfor %}
-	  </select>
-	</div>
+    <div class="new_pagepart first">
+      <select onchange="return PagePartEditor.addPagepart(this)" class="addselect">
+        <option value="">Add a pagepart</option>
+        {% for pagePartType in pagepartadmin.possiblePagePartTypes %}
+          <option value="{{pagePartType.class}}">{{pagePartType.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
 
     <div id="parts_{{pagepartadmin.context}}" class="pageparts_sortable" data-scope="{% spaceless %}
     {% for type in pagepartadmin.possiblePagePartTypes %}
@@ -31,17 +31,16 @@
     {% endfor %}
     {% endspaceless %}">
     {% for id, pagepart in pagepartadmin.pagepartmap %}
-		{% include 'KunstmaanPagePartBundle:PagePartAdminTwigExtension:pagepart.html.twig' with { 'id': id, 'pagepartadmin': pagepartadmin, 'editmode': false} %}
+        {% include 'KunstmaanPagePartBundle:PagePartAdminTwigExtension:pagepart.html.twig' with { 'id': id, 'pagepartadmin': pagepartadmin, 'editmode': false} %}
     {% endfor %}
     </div>
 </div>
 <div id="pagepartsdeletedcontainer"></div>
 <script>
-
     //TODO: singleton pagepareditor
     PagePartEditor = {
-    	propBarMouseDownHandler: function(){
-        		PagePartEditor.sortableClicked = true;
+        propBarMouseDownHandler: function(){
+                PagePartEditor.sortableClicked = true;
                 var scope = $(this).closest('section').data('scope');
                 $('.pageparts_sortable[data-scope~=' + scope + ']')
                     .addClass('connectedSortable')
@@ -53,50 +52,51 @@
                 $('.template-block-content').not('.sortable')
                     .parent().addClass('region-disabled');
             },
-    	sortableClicked: false,
-	    addPagepart: function (select){
-		    pagepartscontainer = jQuery(select).closest('.pagepartscontainer');
-	        jQuery.ajax({
-	            url: '{{ path('KunstmaanPagePartBundle_admin_newpagepart') }}',
-	            data: {
-	            	'pageclassname': pagepartscontainer.data('pageclassname'),
-	            	'pageid': pagepartscontainer.data('pageid'),
-	            	'context': pagepartscontainer.data('context'),
-		            'type': jQuery(select).val()
-		        },
-	            async: true,
-	            success: function(data) {
-		            var result = null;
-		            if(jQuery(select).parent().hasClass('first')) {
-		            	result = jQuery('#parts_'+pagepartscontainer.data('context')).prepend(data);
-			        } else {
-			        	result = jQuery(select).closest('section').after(data);
-				    }
-				    console.log(result);
-				    result.find('.prop_bar').mousedown(PagePartEditor.propBarMouseDownHandler);
-				    disableCKEditors();
-				    enableCKEditors();
-	            }
-		    });
-	        jQuery(select).val('');
-	        return false;
-	    },
-	    deletePagepart: function (id){
-	    	isEdited = true; // enabling the "leave page" popup
-	    	document.getElementById(id + '_deleted').checked = 'checked';
-	    	var container = jQuery('#' + id + '_container');
-	    	container.slideUp(function(){
-	        	container.html('');
-	        });
-	        return true;
-	    },
-	    editPagepart: function (id){
-	    	isEdited = true; // enabling the "leave page" popup
-	        document.getElementById(id + '_edit').style.display = '';
-	        document.getElementById(id + '_view').style.display = 'none';
-	        window.activeEdit = id;
-	        return false;
-	    }
+        sortableClicked: false,
+        addPagepart: function (select){
+            pagepartscontainer = $(select).closest('.pagepartscontainer');
+
+            $.ajax({
+                url: '{{ path('KunstmaanPagePartBundle_admin_newpagepart') }}',
+                data: {
+                    'pageclassname': pagepartscontainer.data('pageclassname'),
+                    'pageid': pagepartscontainer.data('pageid'),
+                    'context': pagepartscontainer.data('context'),
+                    'type': $(select).val()
+                },
+                async: true,
+                success: function(data) {
+                    var result = null;
+                    if($(select).parent().hasClass('first')) {
+                        result = $('#parts_'+pagepartscontainer.data('context')).prepend(data);
+                    } else {
+                        result = $(select).closest('section').after(data);
+                    }
+                    result.find('.prop_bar').mousedown(PagePartEditor.propBarMouseDownHandler);
+                    disableCKEditors();
+                    enableCKEditors();
+                    initCustomSelect();
+                }
+            });
+            $(select).val('');
+            return false;
+        },
+        deletePagepart: function (id){
+            isEdited = true; // enabling the "leave page" popup
+            document.getElementById(id + '_deleted').checked = 'checked';
+            var container = $('#' + id + '_container');
+            container.slideUp(function(){
+                container.html('');
+            });
+            return true;
+        },
+        editPagepart: function (id){
+            isEdited = true; // enabling the "leave page" popup
+            document.getElementById(id + '_edit').style.display = '';
+            document.getElementById(id + '_view').style.display = 'none';
+            window.activeEdit = id;
+            return false;
+        }
     }
 
     function disableCKEditors(){
@@ -109,22 +109,40 @@
     }
 
     function enableCKEditors(){
-    	jQuery('textarea.rich_editor').each(function(item){
-			var config = {};
-        	if($(this).attr('height')){
-        		config.height = $(this).attr('height');
+        $('textarea.rich_editor').each(function(item){
+            var config = {};
+            if($(this).attr('height')){
+                config.height = $(this).attr('height');
             }
-        	if($(this).attr('noparagraphs')){
-        		config.enterMode = CKEDITOR.ENTER_BR;
-	         		config.shiftEnterMode = CKEDITOR.ENTER_P;
+            if($(this).attr('noparagraphs')){
+                config.enterMode = CKEDITOR.ENTER_BR;
+                    config.shiftEnterMode = CKEDITOR.ENTER_P;
             }
-
             CKEDITOR.replace( $(this).attr('id'), config);
 
-		});
+            // Add id on iframe so that behat tests can interact
+            var id = $(this).attr('id');
+            var checkExist = setInterval(function() {
+                if ($('.pagepart .cke_editor_' + id + ' iframe').length) {
+                    var parts = id.split("_");
+                    var name = parts[parts.length-1];
+                    $('.pagepart .cke_editor_' + id + ' iframe').attr('id', 'cke_iframe_' + name);
+                    clearInterval(checkExist);
+                }
+            }, 150);
+        });
     }
 
     $(document).ready(function () {
+
+        var heightenEmptyDropZones = function(elementHeight) {
+            var $empty = jQuery('.connectedSortable:not(:has(>section))');
+            $empty.css({'height': elementHeight});
+        }
+
+        var autoHeightDropZones = function() {
+            jQuery('.connectedSortable').css({'height': ''});
+        }
 
         $('.prop_bar').mousedown(PagePartEditor.propBarMouseDownHandler);
         $('body').mouseup(
@@ -142,7 +160,7 @@
             }
         );
         $('#parts_{{pagepartadmin.context}}').sortable({
-        	iframeFix: true,
+            iframeFix: true,
             connectWith: ".connectedSortable",
             handle: '.prop_bar',
             cursor: 'move',
@@ -151,23 +169,32 @@
             tolerance:"pointer",
             revert: 100,
             opacity: 1,
-    		start: function(e, ui) {
-    			jQuery(ui.item).find('.new_pagepart').html('');
-    			disableCKEditors();
-    	        $('.draggable').css('opacity', ".4");
-    			$('.ui-sortable-helper .new_pagepart').slideUp("fast");
-    		},
-            stop: function(e, ui) {
-                jQuery(ui.item).find('.new_pagepart').html(jQuery(ui.item).parents('.pagepartscontainer').find('.new_pagepart.first').html());
-                //update context names
-                var context = jQuery(ui.item).parents('.pagepartscontainer').data('context');
-                jQuery(ui.item).find('.pagepartadmin_field_updatecontextname').each(function(){
-                    jQuery(this).attr('name', context + jQuery(this).data('suffix'));
-                });
-    			enableCKEditors();
+            start: function(e, ui) {
+                $(ui.item).find('.new_pagepart').html('');
+                disableCKEditors();
+                $('.draggable').css('opacity', ".4");
+                $('.ui-sortable-helper .new_pagepart').slideUp("fast");
 
-    			$('.draggable').css('opacity', "1");
-    		}
+                // Temporarily change the height of empty pagepart containers.
+                heightenEmptyDropZones(ui.item.outerHeight(true));
+            },
+            stop: function(e, ui) {
+                $(ui.item).find('.new_pagepart').html($(ui.item).parents('.pagepartscontainer').find('.new_pagepart.first').html());
+                //update context names
+                var context = $(ui.item).parents('.pagepartscontainer').data('context');
+                $(ui.item).find('.pagepartadmin_field_updatecontextname').each(function(){
+                    $(this).attr('name', context + $(this).data('suffix'));
+                });
+                enableCKEditors();
+
+                // Revert the height for the dropzones.
+                autoHeightDropZones();
+
+                // Remove connectedSortable when stopped dropping.
+                $('.connectedSortable').removeClass('connectedSortable');
+
+                $('.draggable').css('opacity', "1");
+            }
         });
 
     });

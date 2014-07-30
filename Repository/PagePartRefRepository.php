@@ -4,7 +4,7 @@ namespace Kunstmaan\PagePartBundle\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-
+use Kunstmaan\AdminBundle\Entity\DeepCloneInterface;
 use Kunstmaan\UtilitiesBundle\Helper\ClassLookup;
 use Kunstmaan\PagePartBundle\Helper\PagePartInterface;
 use Kunstmaan\PagePartBundle\Entity\PagePartRef;
@@ -56,7 +56,11 @@ class PagePartRefRepository extends EntityRepository
      */
     public function getPagePartRefs(HasPagePartsInterface $page, $context = "main")
     {
-        return $this->findBy(array('pageId' => $page->getId(), 'pageEntityname' => ClassLookup::getClass($page), 'context' => $context), array('sequencenumber' => 'ASC'));
+        return $this->findBy(array(
+            'pageId' => $page->getId(),
+            'pageEntityname' => ClassLookup::getClass($page),
+            'context' => $context
+        ), array('sequencenumber' => 'ASC'));
     }
 
     /**
@@ -68,31 +72,59 @@ class PagePartRefRepository extends EntityRepository
     public function getPageParts(HasPagePartsInterface $page, $context = "main")
     {
         $pagepartrefs = $this->getPagePartRefs($page, $context);
-        $result = array();
+
+        // Group pagepartrefs per type and remember the sorting order
+        $types = $order = array();
+        $counter = 1;
         foreach ($pagepartrefs as $pagepartref) {
-            $result[] = $pagepartref->getPagePart($this->getEntityManager());
+            $types[$pagepartref->getPagePartEntityname()][] = $pagepartref->getPagePartId();
+            $order[$pagepartref->getPagePartEntityname() . $pagepartref->getPagePartId()] = $counter;
+            $counter++;
         }
 
-        return $result;
+        // Fetch all the pageparts (only one query per pagepart type)
+        $pageparts = array();
+        foreach ($types as $classname => $ids) {
+            $result = $this->getEntityManager()->getRepository($classname)->findBy(array('id' => $ids));
+            $pageparts = array_merge($pageparts, $result);
+        }
+
+        // Order the pageparts
+        usort($pageparts, function($a, $b) use ($order) {
+            $aPosition = $order[get_class($a) . $a->getId()];
+            $bPosition = $order[get_class($b) . $b->getId()];
+
+            if ($aPosition < $bPosition) {
+                return -1;
+            } elseif ($aPosition > $bPosition) {
+                return 1;
+            }
+            return 0;
+        });
+
+        return $pageparts;
     }
 
     /**
      * @param EntityManager         $em       The entity manager
-     * @param HasPagePartsInterface $frompage The page from where you copy the pageparts
-     * @param HasPagePartsInterface $topage   The page to where you want to copy the pageparts
+     * @param HasPagePartsInterface $fromPage The page from where you copy the pageparts
+     * @param HasPagePartsInterface $toPage   The page to where you want to copy the pageparts
      * @param string                $context  The pagepart context
      */
-    public function copyPageParts(EntityManager $em, HasPagePartsInterface $frompage, HasPagePartsInterface $topage, $context = "main")
+    public function copyPageParts(EntityManager $em, HasPagePartsInterface $fromPage, HasPagePartsInterface $toPage, $context = "main")
     {
-        $frompageparts = $this->getPageParts($frompage, $context);
-        $sequencenumber = 1;
-        foreach ($frompageparts as $frompagepart) {
-            $toppagepart = clone $frompagepart;
-            $toppagepart->setId(null);
-            $em->persist($toppagepart);
+        $fromPageParts = $this->getPageParts($fromPage, $context);
+        $sequenceNumber = 1;
+        foreach ($fromPageParts as $fromPagePart) {
+            $toPagePart = clone $fromPagePart;
+            $toPagePart->setId(null);
+            if ($toPagePart instanceof DeepCloneInterface) {
+                $toPagePart->deepClone();
+            }
+            $em->persist($toPagePart);
             $em->flush();
-            $this->addPagePart($topage, $toppagepart, $sequencenumber, $context);
-            $sequencenumber++;
+            $this->addPagePart($toPage, $toPagePart, $sequenceNumber, $context);
+            $sequenceNumber++;
         }
     }
 

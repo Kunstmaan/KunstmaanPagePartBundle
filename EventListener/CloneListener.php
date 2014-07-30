@@ -5,6 +5,7 @@ namespace Kunstmaan\PagePartBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 
 use Kunstmaan\PagePartBundle\Helper\HasPagePartsInterface;
+use Kunstmaan\PagePartBundle\Helper\HasPageTemplateInterface;
 use Kunstmaan\AdminBundle\Event\DeepCloneAndSaveEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Kunstmaan\PagePartBundle\Helper\PagePartConfigurationReader;
@@ -54,7 +55,9 @@ class CloneListener
         }
         if ($originalEntity instanceof HasPageTemplateInterface) {
             $clonedEntity = $event->getClonedEntity();
-            $newPageTemplateConfiguration = clone $this->em->getRepository('KunstmaanPagePartBundle:PageTemplateConfiguration')->findOrCreateFor($originalEntity);
+            $PageTemplateConfigurationRepo = $this->em->getRepository('KunstmaanPagePartBundle:PageTemplateConfiguration');
+            $PageTemplateConfigurationRepo->setContainer($this->kernel->getContainer());
+            $newPageTemplateConfiguration = clone $PageTemplateConfigurationRepo->findOrCreateFor($originalEntity);
             $newPageTemplateConfiguration->setId(null);
             $newPageTemplateConfiguration->setPageId($clonedEntity->getId());
             $this->em->persist($newPageTemplateConfiguration);
