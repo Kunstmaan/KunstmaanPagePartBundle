@@ -38,7 +38,7 @@
 <div id="pagepartsdeletedcontainer"></div>
 <script>
 
-    var CKEditorsArray = [];
+    var CKEditors_{{ pagepartadmin.context }} = [];
     //TODO: singleton pagepareditor
     PagePartEditor = {
     	propBarMouseDownHandler: function(){
@@ -101,8 +101,11 @@
     }
 
     function disableCKEditors(){
-    	for ( instance in CKEditorsArray ){
-            CKEditorsArray[instance].destroy();
+        for ( instance in CKEDITOR.instances ){
+            if ($('#' + CKEDITOR.instances[instance].name).hasClass('rich_editor')) {
+                CKEDITOR.instances[instance].destroy();
+
+            }
         }
     }
 
@@ -117,7 +120,7 @@
 	         		config.shiftEnterMode = CKEDITOR.ENTER_P;
             }
 
-            CKEditorsArray.push(CKEDITOR.replace( $(this).attr('id'), config));
+            CKEditors_{{ pagepartadmin.context }}.push(CKEDITOR.replace( $(this).attr('id'), config));
 
 		});
     }
