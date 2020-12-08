@@ -3,12 +3,8 @@
 namespace Kunstmaan\PagePartBundle\Tests\Form;
 
 use Kunstmaan\PagePartBundle\Form\TextPagePartAdminType;
-use Kunstmaan\PagePartBundle\Tests\unit\Form\PagePartAdminTypeTestCase;
 use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * Class TextPagePartAdminTypeTest
- */
 class TextPagePartAdminTypeTest extends PagePartAdminTypeTestCase
 {
     /**
@@ -27,7 +23,7 @@ class TextPagePartAdminTypeTest extends PagePartAdminTypeTestCase
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder->expects($this->once())->method('add');
 
-        $this->object->buildForm($builder, array());
+        $this->object->buildForm($builder, []);
     }
 
     public function testConfigureOptions()
