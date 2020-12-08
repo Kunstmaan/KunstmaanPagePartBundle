@@ -5,9 +5,6 @@ namespace Kunstmaan\PagePartBundle\Tests\Entity;
 use Kunstmaan\PagePartBundle\Entity\LinkPagePart;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class LinkPagePartTest
- */
 class LinkPagePartTest extends TestCase
 {
     /**
@@ -15,10 +12,6 @@ class LinkPagePartTest extends TestCase
      */
     protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
     protected function setUp(): void
     {
         $this->object = new LinkPagePart();
