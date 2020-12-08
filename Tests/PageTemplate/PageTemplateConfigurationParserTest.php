@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class PageTemplateConfigurationParserTest extends TestCase
 {
-    public function testParseSf4Flow()
+    public function testParseSymfony4Flow()
     {
         $kernel = $this->createMock(KernelInterface::class);
         $pageTemplateConfigurationParser = new PageTemplateConfigurationParser($kernel, [
@@ -27,7 +27,7 @@ class PageTemplateConfigurationParserTest extends TestCase
         $this->assertEquals('Content page', $result->getName());
     }
 
-    public function testParseSf3Flow()
+    public function testParseSymfony3Flow()
     {
         $kernel = $this->createMock(KernelInterface::class);
         $kernel->method('locateResource')->willReturn(__DIR__ . '/Resources/config/pagetemplates/test.yml');
